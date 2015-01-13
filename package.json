@@ -1,0 +1,54 @@
+{
+  "name": "grunt-as3convert",
+  "description": "Convert AS3 to JS.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/coolblade/jison-as3",
+  "author": {
+    "name": "f3z0",
+    "url": "http://fezo.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coolblade/jison-as3.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coolblade/jison-as3/issues"
+  },
+  "licenses": [
+    {
+      "type": "GPL",
+      "url": "https://github.com/coolblade/jison-as3/blob/master/LICENSE-GPL"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "chalk": "~0.4.0"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-nodeunit": "~0.3.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-internal": "~0.4.6",
+    "grunt": "~0.4.1"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "keywords": [
+    "gruntplugin", "actionscript", "adobe air"
+  ],
+  "files": [
+    "tasks",
+    "LICENSE-GPL"
+  ],
+  "_id": "grunt-as3convert@0.1.0",
+  "maintainers": [
+    {
+      "name": "f3z0",
+      "email": "f3z0@fezo.com"
+    }
+  ],
+  "directories": {}
+}

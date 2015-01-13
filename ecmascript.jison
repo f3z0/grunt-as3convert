@@ -29,6 +29,7 @@ IdentifierStart {UnicodeIdentifierStart}|[$_a-zA-Z]|("\\"[u]{HexDigit}{4})
 IdentifierPart {IdentifierStart}|{UnicodeIdentifierPart}|[0-9]|[\.<>]
 Identifier {IdentifierStart}{IdentifierPart}*
 VarTypeStart ":"
+DataType "String"|"Number"|"int"|"uint"|"Boolean"|"Null"|"void"|"Vector"
 VarTypePart {Identifier}".<"{Identifier}">"|{Identifier}
 VarTypes {VarTypeStart}{VarTypePart}
 ExponentIndicator [eE]
@@ -58,7 +59,7 @@ RegularExpressionFirstChar ([^\n\r\*\\\/\[])|{RegularExpressionBackslashSequence
 RegularExpressionChar ([^\n\r\\\/\[])|{RegularExpressionBackslashSequence}|{RegularExpressionClass}
 RegularExpressionBody {RegularExpressionFirstChar}{RegularExpressionChar}*
 RegularExpressionLiteral {RegularExpressionBody}\/{RegularExpressionFlags}
-
+Var "var"|"const"
 %x REGEXP
 %options flex
 %%
@@ -115,7 +116,7 @@ RegularExpressionLiteral {RegularExpressionBody}\/{RegularExpressionFlags}
 "else"                             return "ELSE";
 "finally"                          return "FINALLY";
 "for"                              return "FOR";
-"function"                         return "FUNCTION";
+"function"                         parser.varParsing = true; return "FUNCTION";
 "if"                               return "IF";
 "in"                               return "IN";
 "instanceof"                       return "INSTANCEOF";
@@ -127,7 +128,7 @@ RegularExpressionLiteral {RegularExpressionBody}\/{RegularExpressionFlags}
 "try"                              return "TRY";
 "typeof"                           parser.restricted = false; return "TYPEOF";
 {}
-"var"                              return "VAR";
+{Var}                              parser.varParsing  = true; return "VAR";
 "package"                              return "PACKAGE";
 "import"                              return "IMPORT";
 "void"                             parser.restricted = false; return "VOID";
@@ -146,7 +147,14 @@ RegularExpressionLiteral {RegularExpressionBody}\/{RegularExpressionFlags}
 "enum"                             return "ENUM";
 "export"                           return "EXPORT";
 "extends"                          return "EXTENDS";
-{VarTypes}                              return "VAR_TYPE";
+{VarTypes}                 %{
+                                        if (parser.varParsing) {
+                                            return "VAR_TYPE";
+                                        } else {
+                                            this.unput(yytext.replace(":", ""));
+                                            return ":";
+                                        }
+                                   %}
 "get"|"set"                     return "GETSET";
 "as"                                return "AS";
 
@@ -154,7 +162,7 @@ RegularExpressionLiteral {RegularExpressionBody}\/{RegularExpressionFlags}
 {DecimalLiteral}                   parser.restricted = false; return "NUMERIC_LITERAL";
 {HexIntegerLiteral}                parser.restricted = false; return "NUMERIC_LITERAL";
 {OctalIntegerLiteral}              parser.restricted = false; return "NUMERIC_LITERAL";
-"{"                                parser.restricted = false; return "{";
+"{"                                parser.varParsing = false; parser.restricted = false; return "{";
 "}"                                return "}";
 "("                                parser.restricted = false; return "(";
 ")"                                return ")";
@@ -304,18 +312,22 @@ VariableDeclarationListNoIn
 VariableDeclaration
     : "IDENTIFIER" "VAR_TYPE"
         {
+          parser.varParsing = false;
             $$ = new VariableDeclaratorNode(new IdentifierNode($1, createSourceLocation(null, @1, @1)), null, createSourceLocation(null, @1, @1));
         }
     | "IDENTIFIER" "VAR_TYPE" Initialiser
         {
+        parser.varParsing = false;
             $$ = new VariableDeclaratorNode(new IdentifierNode($1, createSourceLocation(null, @1, @1)), $3, createSourceLocation(null, @1, @3));
         }
     | "IDENTIFIER"
         {
+        parser.varParsing = false;
             $$ = new VariableDeclaratorNode(new IdentifierNode($1, createSourceLocation(null, @1, @1)), null, createSourceLocation(null, @1, @1));
         }
     | "IDENTIFIER" Initialiser
         {
+        parser.varParsing = false;
             $$ = new VariableDeclaratorNode(new IdentifierNode($1, createSourceLocation(null, @1, @1)), $2, createSourceLocation(null, @1, @2));
         }
     ;
