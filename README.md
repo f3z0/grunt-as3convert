@@ -1,2 +1,2 @@
-# jison-as3
-Early semi-working version of jison lexer from AS3 to JS.
+# grunt-as3convert
+Partially working implementation of AS3 to JavaScript conversion using jison.
