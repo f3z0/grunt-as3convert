@@ -32,6 +32,7 @@ VarTypeStart ":"
 DataType "String"|"Number"|"int"|"uint"|"Boolean"|"Null"|"void"|"Vector"
 VarTypePart {Identifier}".<"{Identifier}">"|{Identifier}
 VarTypes {VarTypeStart}{VarTypePart}
+VectorInitializer "new <"{Identifier}">"|"new<"{Identifier}">"
 ExponentIndicator [eE]
 SignedInteger [+-]?[0-9]+
 DecimalIntegerLiteral [0]|({NonZeroDigit}{DecimalDigits}*)
@@ -120,6 +121,7 @@ Var "var"|"const"
 "if"                               return "IF";
 "in"                               return "IN";
 "instanceof"                       return "INSTANCEOF";
+{VectorInitializer}               return this.next();
 "new"                              parser.restricted = false; return "NEW";
 "return"                           parser.restricted = true; return "RETURN";
 "switch"                           return "SWITCH";
@@ -364,6 +366,8 @@ InitialiserNoIn
             $$ = $2;
         }
     ;
+    
+
 
 EmptyStatement
     : ";"

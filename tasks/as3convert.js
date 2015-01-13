@@ -27,7 +27,6 @@ module.exports = function(grunt) {
           return true;
         }
       });
-      console.log(file)
 
       var as3 = "";
 
@@ -40,7 +39,6 @@ module.exports = function(grunt) {
         return program.print("", "  ");
 
       }).join('');
-console.log('js ' + js)
 
       if (as3.length === 0) {
         return grunt.log.warn('Destination not written because converted AS3 was empty.');
